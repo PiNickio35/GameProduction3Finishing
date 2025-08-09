@@ -94,7 +94,7 @@ public partial class @CharacterInput: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""555871c5-536b-4354-8043-59762abba2f1"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
