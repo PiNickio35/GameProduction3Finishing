@@ -1,34 +1,41 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace _PROJECT.Scripts
 {
     public class CameraFollow : MonoBehaviour
     {
-        [Header("Follow Parameters")]
-        
-        [Tooltip("GameObject you want the camera to follow.")]
-        public Transform target;
-        
-        [SerializeField, Range(0.01f, 1f), Tooltip("How fast the camera follows the object")]
-        private float smoothSpeed = 0.125f;
-        
-        [SerializeField, Tooltip("Camera offset from the transform target")]
-        private Vector3 offset = new Vector3(0f, 2.25f, -1.5f);
-        
-        // Necessary for Smooth Damp function
-        private Vector3 _velocity = Vector3.zero;
+        private const float YMin = -50.0f;
+        private const float YMax = 50.0f;
 
-        private void LateUpdate()
+        public Transform lookAt;
+
+        public Transform Player;
+
+        public float distance = 10.0f;
+        private float currentX = 0.0f;
+        private float currentY = 0.0f;
+        public float sensivity = 400.0f;
+        public Vector2 mousePos;
+
+        // Update is called once per frame
+        void LateUpdate()
         {
-            // Get the position the camera should move to
-            Vector3 desiredPosition = target.position + offset;
-            // Move the camera using a SmoothDamp function
-            transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref _velocity, smoothSpeed);
+            currentX += mousePos.x * sensivity * Time.deltaTime;
+            currentY += mousePos.y * sensivity * Time.deltaTime;
+
+            currentY = Mathf.Clamp(currentY, YMin, YMax);
+
+            Vector3 Direction = new Vector3(0, 0, distance);
+            Quaternion rotation = Quaternion.Euler(currentY, currentX, 0);
+            transform.position = lookAt.position + rotation * Direction;
+
+            transform.LookAt(lookAt.position);
         }
 
-        public void CenterOnTarget()
+        public void OnLook(InputAction.CallbackContext context)
         {
-            transform.position = target.position + offset;
+            mousePos = context.ReadValue<Vector2>();
         }
     }
 }

@@ -16,6 +16,8 @@ namespace _PROJECT.Scripts
         
         private Vector2 _moveInput = Vector2.zero;
         private bool _jumped = false;
+        
+        [SerializeField] private Transform cam;
 
         private void Awake()
         {
@@ -40,9 +42,25 @@ namespace _PROJECT.Scripts
                 _playerVelocity.y = 0f;
             }
 
-            // Read input
-            Vector3 move = new Vector3(_moveInput.x, 0, _moveInput.y);
-            _controller.Move(move * (playerSpeed * Time.deltaTime));
+            float Horizontal = _moveInput.x * playerSpeed * Time.deltaTime;
+            float Vertical = _moveInput.y * playerSpeed * Time.deltaTime;
+
+            Vector3 Movement = cam.transform.right * Horizontal + cam.transform.forward * Vertical;
+            Movement.y = 0f;
+
+            _controller.Move(Movement);
+
+            if (Movement.magnitude != 0f)
+            {
+                transform.Rotate(Vector3.up * cam.GetComponent<CameraFollow>().mousePos.x * cam.GetComponent<CameraFollow>().sensivity * Time.deltaTime);
+
+
+                Quaternion CamRotation = cam.rotation;
+                CamRotation.x = 0f;
+                CamRotation.z = 0f;
+
+                transform.rotation = Quaternion.Lerp(transform.rotation, CamRotation, 0.1f);
+            }
 
             // Jump
             if (_jumped && _groundedPlayer)
