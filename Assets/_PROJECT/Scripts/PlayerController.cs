@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,22 +7,40 @@ namespace _PROJECT.Scripts
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
-        private CharacterController _controller;
-        private Vector3 _playerVelocity;
-        private bool _groundedPlayer;
+        private Rigidbody _rb;
         
-        [SerializeField] private float playerSpeed = 5.0f;
-        [SerializeField] private float jumpHeight = 1.5f;
-        [SerializeField] private float gravityValue = -9.81f;
+        private float _currentSpeed;
+        public float maxSpeed;
+        public float boostSpeed;
+        private float _realSpeed;
+
+        private float _steerDirection;
+        private float driftTime;
+
+        private bool driftLeft;
+        private bool driftRight;
+        private float outwardsDriftForce = 50000;
+        
+        public bool touchingGround;
+
+        [HideInInspector]
+        public float boostTime;
         
         private Vector2 _moveInput = Vector2.zero;
-        private bool _jumped = false;
-        
-        [SerializeField] private Transform cam;
+        private bool _drifting;
+
+        public int lapNumber;
+        public int checkpointIndex;
 
         private void Awake()
         {
-            _controller = gameObject.GetComponent<CharacterController>();
+            _rb = GetComponent<Rigidbody>();
+        }
+
+        private void Start()
+        {
+            lapNumber = 1;
+            checkpointIndex = 0;
         }
 
         public void OnMove(InputAction.CallbackContext context)
@@ -29,49 +48,139 @@ namespace _PROJECT.Scripts
             _moveInput = context.ReadValue<Vector2>();
         }
 
-        public void OnJump(InputAction.CallbackContext context)
+        public void OnDrift(InputAction.CallbackContext context)
         {
-            _jumped = context.action.triggered;
+            _drifting = context.action.triggered;
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            _groundedPlayer = _controller.isGrounded;
-            if (_groundedPlayer && _playerVelocity.y < 0)
+            Move();
+            // TireSteer();
+            Steer();
+            GroundNormalRotation();
+            Drift();
+            Boosts();
+            Debug.Log(driftTime);
+        }
+
+        private void Move()
+        {
+            _realSpeed = transform.InverseTransformDirection(_rb.linearVelocity).z;
+            _currentSpeed = Mathf.Lerp(_currentSpeed, maxSpeed * _moveInput.y, Time.fixedDeltaTime);
+            Vector3 vel = transform.forward * _currentSpeed;
+            vel.y = _rb.linearVelocity.y;
+            _rb.linearVelocity = vel;
+        }
+
+        private void Steer()
+        {
+            _steerDirection = _moveInput.x;
+
+            if (driftLeft && !driftRight)
             {
-                _playerVelocity.y = 0f;
+                _steerDirection = _moveInput.x < 0 ? -1.5f : -0.5f;
+                transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, -20f, 0), 8f * Time.fixedDeltaTime);
+                // isSliding if hop is added
+                if (touchingGround) _rb.AddForce(transform.right * (outwardsDriftForce * Time.fixedDeltaTime), ForceMode.Acceleration);
             }
-
-            float Horizontal = _moveInput.x * playerSpeed * Time.deltaTime;
-            float Vertical = _moveInput.y * playerSpeed * Time.deltaTime;
-
-            Vector3 Movement = cam.transform.right * Horizontal + cam.transform.forward * Vertical;
-            Movement.y = 0f;
-
-            _controller.Move(Movement);
-
-            if (Movement.magnitude != 0f)
+            else if (driftRight && !driftLeft)
             {
-                transform.Rotate(Vector3.up * cam.GetComponent<CameraFollow>().mousePos.x * cam.GetComponent<CameraFollow>().sensivity * Time.deltaTime);
-
-
-                Quaternion CamRotation = cam.rotation;
-                CamRotation.x = 0f;
-                CamRotation.z = 0f;
-
-                transform.rotation = Quaternion.Lerp(transform.rotation, CamRotation, 0.1f);
+                _steerDirection = _moveInput.x < 0 ? 1.5f : 0.5f;
+                transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, 20f, 0), 8f * Time.fixedDeltaTime);
+                // isSliding if hop is added
+                if (touchingGround) _rb.AddForce(transform.right * (-outwardsDriftForce * Time.fixedDeltaTime), ForceMode.Acceleration);
             }
-
-            // Jump
-            if (_jumped && _groundedPlayer)
+            else
             {
-                _playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
+                transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, 0, 0), 8f * Time.fixedDeltaTime);
             }
-
-            // Apply gravity
-            _playerVelocity.y += gravityValue * Time.deltaTime;
             
-            _controller.Move(_playerVelocity * Time.deltaTime);
+            var steerAmount = _realSpeed > 30 ? _realSpeed / 4 * _steerDirection : _realSpeed / 1.5f * _steerDirection;
+            
+            var steerDirectionVector = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + steerAmount, transform.eulerAngles.z);
+
+            transform.eulerAngles = Vector3.Lerp(transform.eulerAngles, steerDirectionVector, Time.fixedDeltaTime * 3);
+        }
+
+        private void GroundNormalRotation()
+        {
+            if (Physics.Raycast(transform.position, -transform.up, out var hit, 1.75f))
+            {
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.FromToRotation(transform.up * 2, hit.normal) * transform.rotation, 7.5f * Time.fixedDeltaTime);
+                touchingGround = true;
+            }
+            else
+            {
+                touchingGround = false;
+            }
+        }
+
+        private void Drift()
+        {
+            if (_drifting && touchingGround)
+            {
+                // transform.GetChild(0).GetComponent<Animator>().SetTrigger("Hop");
+                if (_steerDirection > 0)
+                {
+                    driftRight = true;
+                    driftLeft = false;
+                }
+                else if (_steerDirection < 0)
+                {
+                    driftRight = false;
+                    driftLeft = true;
+                }
+            }
+
+            if (_drifting && touchingGround && _currentSpeed > 40 && _moveInput.x != 0)
+            {
+                driftTime += Time.fixedDeltaTime;
+
+               // Particle system and different boost colours 
+            }
+
+            if (!_drifting || _realSpeed < 40)
+            {
+                driftLeft = false;
+                driftRight = false;
+                // isSliding = false;
+                
+                if (driftTime >= 1.5 && driftTime < 4)
+                {
+                    boostTime = 0.75f;
+                }
+
+                if (driftTime >= 4 && driftTime < 7)
+                {
+                    boostTime = 1.5f;
+                }
+
+                if (driftTime >= 7)
+                {
+                    boostTime = 2.5f;
+                }
+                
+                driftTime = 0;
+                // Stop particles
+            }
+        }
+
+        private void Boosts()
+        {
+            boostTime -= Time.fixedDeltaTime;
+            if (boostTime > 0)
+            {
+                Debug.Log("boostTime: " + boostTime);
+                // Particles
+                maxSpeed = boostSpeed;
+                _currentSpeed = Mathf.Lerp(_currentSpeed, maxSpeed, Time.fixedDeltaTime);
+            }
+            else
+            {
+                // Particles
+                maxSpeed = boostSpeed - 20;
+            }
         }
     }
 }

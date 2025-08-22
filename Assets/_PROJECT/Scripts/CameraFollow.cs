@@ -1,41 +1,28 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace _PROJECT.Scripts
 {
     public class CameraFollow : MonoBehaviour
     {
-        private const float YMin = -50.0f;
-        private const float YMax = 50.0f;
+        public Vector3 offset;
+        public Transform target;
+        
+        private PlayerController player;
+        
+        public Vector3 origCamPos;
+        public Vector3 boostCamPos;
 
-        public Transform lookAt;
-
-        public Transform Player;
-
-        public float distance = 10.0f;
-        private float currentX = 0.0f;
-        private float currentY = 0.0f;
-        public float sensivity = 400.0f;
-        public Vector2 mousePos;
-
-        // Update is called once per frame
+        void Awake()
+        {
+            player = target.GetComponent<PlayerController>();
+        }
+        
         void LateUpdate()
         {
-            currentX += mousePos.x * sensivity * Time.deltaTime;
-            currentY += mousePos.y * sensivity * Time.deltaTime;
+            transform.position = target.position + offset;
+            transform.rotation = Quaternion.Slerp(transform.rotation, target.rotation, 3 * Time.deltaTime);
 
-            currentY = Mathf.Clamp(currentY, YMin, YMax);
-
-            Vector3 Direction = new Vector3(0, 0, distance);
-            Quaternion rotation = Quaternion.Euler(currentY, currentX, 0);
-            transform.position = lookAt.position + rotation * Direction;
-
-            transform.LookAt(lookAt.position);
-        }
-
-        public void OnLook(InputAction.CallbackContext context)
-        {
-            mousePos = context.ReadValue<Vector2>();
+            transform.GetChild(0).localPosition = Vector3.Lerp(transform.GetChild(0).localPosition, player.boostTime > 0 ? boostCamPos : origCamPos, 3 * Time.deltaTime);
         }
     }
 }
