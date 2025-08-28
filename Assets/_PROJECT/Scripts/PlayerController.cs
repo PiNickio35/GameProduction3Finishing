@@ -61,7 +61,6 @@ namespace _PROJECT.Scripts
             GroundNormalRotation();
             Drift();
             Boosts();
-            Debug.Log(driftTime);
         }
 
         private void Move()
@@ -96,7 +95,7 @@ namespace _PROJECT.Scripts
                 transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, 0, 0), 8f * Time.fixedDeltaTime);
             }
             
-            var steerAmount = _realSpeed > 30 ? _realSpeed / 4 * _steerDirection : _realSpeed / 1.5f * _steerDirection;
+            var steerAmount = _realSpeed > 20 ? _realSpeed / 1.5f * _steerDirection * 2 : _realSpeed * _steerDirection * 2;
             
             var steerDirectionVector = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + steerAmount, transform.eulerAngles.z);
 
@@ -133,14 +132,14 @@ namespace _PROJECT.Scripts
                 }
             }
 
-            if (_drifting && touchingGround && _currentSpeed > 40 && _moveInput.x != 0)
+            if (_drifting && touchingGround && _currentSpeed > 20 && _moveInput.x != 0)
             {
                 driftTime += Time.fixedDeltaTime;
 
                // Particle system and different boost colours 
             }
 
-            if (!_drifting || _realSpeed < 40)
+            if (!_drifting || _realSpeed < 20)
             {
                 driftLeft = false;
                 driftRight = false;
@@ -171,7 +170,6 @@ namespace _PROJECT.Scripts
             boostTime -= Time.fixedDeltaTime;
             if (boostTime > 0)
             {
-                Debug.Log("boostTime: " + boostTime);
                 // Particles
                 maxSpeed = boostSpeed;
                 _currentSpeed = Mathf.Lerp(_currentSpeed, maxSpeed, Time.fixedDeltaTime);

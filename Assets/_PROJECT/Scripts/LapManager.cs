@@ -17,7 +17,7 @@ namespace _PROJECT.Scripts
                 {
                     playerController.checkpointIndex = 0;
                     playerController.lapNumber++;
-
+                    Debug.Log("Lap #" + playerController.lapNumber);
                     if (playerController.lapNumber > totalLaps)
                     {
                         Debug.Log("You Win!");
