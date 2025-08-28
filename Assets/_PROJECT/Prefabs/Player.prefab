@@ -296,6 +296,8 @@ MonoBehaviour:
   boostSpeed: 80
   touchingGround: 0
   boostTime: 0
+  lapNumber: 0
+  checkpointIndex: 0
 --- !u!114 &4349179118173384143
 MonoBehaviour:
   m_ObjectHideFlags: 0
