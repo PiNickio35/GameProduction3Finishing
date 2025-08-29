@@ -1,10 +1,8 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _PROJECT.Scripts
 {
-    [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
         private Rigidbody _rb;
@@ -14,17 +12,33 @@ namespace _PROJECT.Scripts
         public float boostSpeed;
         private float _realSpeed;
 
+        public Transform frontLeftTyre;
+        public Transform frontRightTyre;
+        public Transform backLeftTyre;
+        public Transform backRightTyre;
+
         private float _steerDirection;
         private float driftTime;
 
         private bool driftLeft;
         private bool driftRight;
         private float outwardsDriftForce = 50000;
+
+        public bool isSliding;
         
         public bool touchingGround;
+        
+        [Header("Particle Drift Sparks")]
+        public Transform leftDrift;
+        public Transform rightDrift;
+        public Color drift1;
+        public Color drift2;
+        public Color drift3;
 
         [HideInInspector]
         public float boostTime;
+
+        public Transform boostFire;
         
         private Vector2 _moveInput = Vector2.zero;
         private bool _drifting;
@@ -56,7 +70,7 @@ namespace _PROJECT.Scripts
         private void FixedUpdate()
         {
             Move();
-            // TireSteer();
+            TyreSteer();
             Steer();
             GroundNormalRotation();
             Drift();
@@ -72,26 +86,59 @@ namespace _PROJECT.Scripts
             _rb.linearVelocity = vel;
         }
 
-        private void Steer()
+        private void TyreSteer()
         {
-            _steerDirection = _moveInput.x;
-
-            if (driftLeft && !driftRight)
+            if (_moveInput.x < 0)
             {
-                _steerDirection = _moveInput.x < 0 ? -1.5f : -0.5f;
-                transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, -20f, 0), 8f * Time.fixedDeltaTime);
-                // isSliding if hop is added
-                if (touchingGround) _rb.AddForce(transform.right * (outwardsDriftForce * Time.fixedDeltaTime), ForceMode.Acceleration);
+                frontLeftTyre.localEulerAngles = new Vector3(frontLeftTyre.localEulerAngles.x, Mathf.Lerp(frontLeftTyre.localEulerAngles.y, 155, 5 * Time.fixedDeltaTime), frontLeftTyre.localEulerAngles.z);
+                frontRightTyre.localEulerAngles = new Vector3(frontRightTyre.localEulerAngles.x, Mathf.Lerp(frontRightTyre.localEulerAngles.y, 155, 5 * Time.fixedDeltaTime), frontRightTyre.localEulerAngles.z);
             }
-            else if (driftRight && !driftLeft)
+            else if (_moveInput.x > 0)
             {
-                _steerDirection = _moveInput.x < 0 ? 1.5f : 0.5f;
-                transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, 20f, 0), 8f * Time.fixedDeltaTime);
-                // isSliding if hop is added
-                if (touchingGround) _rb.AddForce(transform.right * (-outwardsDriftForce * Time.fixedDeltaTime), ForceMode.Acceleration);
+                frontLeftTyre.localEulerAngles = new Vector3(frontLeftTyre.localEulerAngles.x, Mathf.Lerp(frontLeftTyre.localEulerAngles.y, 205, 5 * Time.fixedDeltaTime), frontLeftTyre.localEulerAngles.z);
+                frontRightTyre.localEulerAngles = new Vector3(frontRightTyre.localEulerAngles.x, Mathf.Lerp(frontRightTyre.localEulerAngles.y, 205, 5 * Time.fixedDeltaTime), frontRightTyre.localEulerAngles.z);
             }
             else
             {
+                frontLeftTyre.localEulerAngles = new Vector3(frontLeftTyre.localEulerAngles.x, Mathf.Lerp(frontLeftTyre.localEulerAngles.y, 180, 5 * Time.fixedDeltaTime), frontLeftTyre.localEulerAngles.z);
+                frontRightTyre.localEulerAngles = new Vector3(frontRightTyre.localEulerAngles.x, Mathf.Lerp(frontRightTyre.localEulerAngles.y, 180, 5 * Time.fixedDeltaTime), frontRightTyre.localEulerAngles.z);
+            }
+
+            if (_currentSpeed > 20)
+            {
+                frontLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
+                frontRightTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
+                backLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
+                backRightTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
+            }
+            else
+            {
+                frontLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
+                frontRightTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
+                backLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
+                backRightTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
+            }
+        }
+
+        private void Steer()
+        {
+            if (driftLeft && !driftRight)
+            {
+                _steerDirection = _moveInput.x < 0 ? -1.2f : -0.5f;
+                transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, -20f, 0), 8f * Time.fixedDeltaTime);
+                // isSliding if hop is added
+                if (isSliding && touchingGround) _rb.AddForce(transform.right * (outwardsDriftForce * Time.fixedDeltaTime), ForceMode.Acceleration);
+            }
+            else if (driftRight && !driftLeft)
+            {
+                _steerDirection = _moveInput.x > 0 ? 1.2f : 0.5f;
+                transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, 20f, 0), 8f * Time.fixedDeltaTime);
+                // isSliding if hop is added
+                if (isSliding && touchingGround) _rb.AddForce(transform.right * (-outwardsDriftForce * Time.fixedDeltaTime), ForceMode.Acceleration);
+            }
+            else
+            {
+                _steerDirection = _moveInput.x;
                 transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, 0, 0), 8f * Time.fixedDeltaTime);
             }
             
@@ -119,7 +166,7 @@ namespace _PROJECT.Scripts
         {
             if (_drifting && touchingGround)
             {
-                // transform.GetChild(0).GetComponent<Animator>().SetTrigger("Hop");
+                transform.GetChild(0).GetComponent<Animator>().SetTrigger("Hop");
                 if (_steerDirection > 0)
                 {
                     driftRight = true;
@@ -136,14 +183,63 @@ namespace _PROJECT.Scripts
             {
                 driftTime += Time.fixedDeltaTime;
 
-               // Particle system and different boost colours 
+               if (driftTime >= 1.5 && driftTime < 4)
+                {
+                    for (int i = 0; i < leftDrift.childCount; i++)
+                    {
+                        ParticleSystem DriftPS = rightDrift.transform.GetChild(i).GetComponent<ParticleSystem>();
+                        ParticleSystem.MainModule PSMain = DriftPS.main;
+                        
+                        ParticleSystem DriftPS2 = leftDrift.transform.GetChild(i).GetComponent<ParticleSystem>();
+                        ParticleSystem.MainModule PSMain2 = DriftPS2.main;
+
+                        PSMain.startColor = drift1;
+                        PSMain2.startColor = drift1;
+
+                        if (!DriftPS.isPlaying && !DriftPS2.isPlaying)
+                        {
+                            DriftPS.Play();
+                            DriftPS2.Play();
+                        }
+                    }
+                }
+
+                if (driftTime >= 4 && driftTime < 7)
+                {
+                    for (int i = 0; i < leftDrift.childCount; i++)
+                    {
+                        ParticleSystem DriftPS = rightDrift.transform.GetChild(i).GetComponent<ParticleSystem>();
+                        ParticleSystem.MainModule PSMain = DriftPS.main;
+
+                        ParticleSystem DriftPS2 = leftDrift.transform.GetChild(i).GetComponent<ParticleSystem>();
+                        ParticleSystem.MainModule PSMain2 = DriftPS2.main;
+
+                        PSMain.startColor = drift2;
+                        PSMain2.startColor = drift2;
+                    }
+                }
+
+                if (driftTime >= 7)
+                {
+                    for (int i = 0; i < leftDrift.childCount; i++)
+                    {
+                        ParticleSystem DriftPS = rightDrift.transform.GetChild(i).GetComponent<ParticleSystem>();
+                        ParticleSystem.MainModule PSMain = DriftPS.main;
+
+                        ParticleSystem DriftPS2 = leftDrift.transform.GetChild(i).GetComponent<ParticleSystem>();
+                        ParticleSystem.MainModule PSMain2 = DriftPS2.main;
+
+                        PSMain.startColor = drift3;
+                        PSMain2.startColor = drift3;
+                    }
+                } 
             }
 
             if (!_drifting || _realSpeed < 20)
             {
                 driftLeft = false;
                 driftRight = false;
-                // isSliding = false;
+                isSliding = false;
                 
                 if (driftTime >= 1.5 && driftTime < 4)
                 {
@@ -161,7 +257,17 @@ namespace _PROJECT.Scripts
                 }
                 
                 driftTime = 0;
-                // Stop particles
+                for (int i = 0; i <= 2; i++)
+                {
+                    ParticleSystem DriftPS = rightDrift.transform.GetChild(i).GetComponent<ParticleSystem>();
+                    ParticleSystem.MainModule PSMain = DriftPS.main;
+                    
+                    ParticleSystem DriftPS2 = leftDrift.transform.GetChild(i).GetComponent<ParticleSystem>();
+                    ParticleSystem.MainModule PSMain2 = DriftPS2.main;
+                    
+                    DriftPS.Stop();
+                    DriftPS2.Stop();
+                }
             }
         }
 
@@ -170,13 +276,22 @@ namespace _PROJECT.Scripts
             boostTime -= Time.fixedDeltaTime;
             if (boostTime > 0)
             {
-                // Particles
+                for (int i = 0; i < boostFire.childCount; i++)
+                {
+                    if (!boostFire.GetComponent<ParticleSystem>().isPlaying)
+                    {
+                        boostFire.GetComponent<ParticleSystem>().Play();
+                    }
+                }
                 maxSpeed = boostSpeed;
                 _currentSpeed = Mathf.Lerp(_currentSpeed, maxSpeed, Time.fixedDeltaTime);
             }
             else
             {
-                // Particles
+                for (int i = 0; i < boostFire.childCount; i++)
+                {
+                    boostFire.GetComponent<ParticleSystem>().Stop();
+                }
                 maxSpeed = boostSpeed - 20;
             }
         }
