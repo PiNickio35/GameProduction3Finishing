@@ -67,6 +67,11 @@ namespace _PROJECT.Scripts
             _drifting = context.action.triggered;
         }
 
+        public void OnQuit(InputAction.CallbackContext context)
+        {
+            Application.Quit();
+        }
+
         private void FixedUpdate()
         {
             Move();
@@ -104,20 +109,20 @@ namespace _PROJECT.Scripts
                 frontRightTyre.localEulerAngles = new Vector3(frontRightTyre.localEulerAngles.x, Mathf.Lerp(frontRightTyre.localEulerAngles.y, 180, 5 * Time.fixedDeltaTime), frontRightTyre.localEulerAngles.z);
             }
 
-            if (_currentSpeed > 20)
-            {
-                frontLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
-                frontRightTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
-                backLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
-                backRightTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
-            }
-            else
-            {
-                frontLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
-                frontRightTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
-                backLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
-                backRightTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
-            }
+            // if (_currentSpeed > 20)
+            // {
+            //     frontLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
+            //     frontRightTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
+            //     backLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
+            //     backRightTyre.Rotate(-90 * Time.fixedDeltaTime * _currentSpeed * 0.5f, 0, 0);
+            // }
+            // else
+            // {
+            //     frontLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
+            //     frontRightTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
+            //     backLeftTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
+            //     backRightTyre.Rotate(-90 * Time.fixedDeltaTime * _realSpeed * 0.5f, 0, 0);
+            // }
         }
 
         private void Steer()
@@ -198,6 +203,7 @@ namespace _PROJECT.Scripts
 
                         if (!DriftPS.isPlaying && !DriftPS2.isPlaying)
                         {
+                            Debug.Log("Ek is hier");
                             DriftPS.Play();
                             DriftPS2.Play();
                         }
@@ -237,6 +243,7 @@ namespace _PROJECT.Scripts
 
             if (!_drifting || _realSpeed < 20)
             {
+                transform.GetChild(0).GetComponent<Animator>().SetTrigger("DoneHopping");
                 driftLeft = false;
                 driftRight = false;
                 isSliding = false;

@@ -1,0 +1,4 @@
+References
+
+Ishaan35. (2020, August 29). Mario Kart - Detailed Kart Controller. YouTube. https://www.youtube.com/watch?v=q0cUClufuKE
+Unity Technologies. (2023, September 14). Unity Learn | Karting Microgame | URP [Unity Asset]. Unity Asset Store. https://assetstore.unity.com/packages/p/unity-learn-karting-microgame-urp-150956
