@@ -14,15 +14,13 @@ namespace _PROJECT.Scripts
 
         public Transform frontLeftTyre;
         public Transform frontRightTyre;
-        public Transform backLeftTyre;
-        public Transform backRightTyre;
 
         private float _steerDirection;
-        private float driftTime;
+        private float _driftTime;
 
-        private bool driftLeft;
-        private bool driftRight;
-        private float outwardsDriftForce = 50000;
+        private bool _driftLeft;
+        private bool _driftRight;
+        private float _outwardsDriftForce = 50000;
 
         public bool isSliding;
         
@@ -127,19 +125,19 @@ namespace _PROJECT.Scripts
 
         private void Steer()
         {
-            if (driftLeft && !driftRight)
+            if (_driftLeft && !_driftRight)
             {
                 _steerDirection = _moveInput.x < 0 ? -1.2f : -0.5f;
                 transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, -20f, 0), 8f * Time.fixedDeltaTime);
                 // isSliding if hop is added
-                if (isSliding && touchingGround) _rb.AddForce(transform.right * (outwardsDriftForce * Time.fixedDeltaTime), ForceMode.Acceleration);
+                if (isSliding && touchingGround) _rb.AddForce(transform.right * (_outwardsDriftForce * Time.fixedDeltaTime), ForceMode.Acceleration);
             }
-            else if (driftRight && !driftLeft)
+            else if (_driftRight && !_driftLeft)
             {
                 _steerDirection = _moveInput.x > 0 ? 1.2f : 0.5f;
                 transform.GetChild(0).localRotation = Quaternion.Lerp(transform.GetChild(0).localRotation, Quaternion.Euler(0, 20f, 0), 8f * Time.fixedDeltaTime);
                 // isSliding if hop is added
-                if (isSliding && touchingGround) _rb.AddForce(transform.right * (-outwardsDriftForce * Time.fixedDeltaTime), ForceMode.Acceleration);
+                if (isSliding && touchingGround) _rb.AddForce(transform.right * (-_outwardsDriftForce * Time.fixedDeltaTime), ForceMode.Acceleration);
             }
             else
             {
@@ -174,21 +172,21 @@ namespace _PROJECT.Scripts
                 transform.GetChild(0).GetComponent<Animator>().SetTrigger("Hop");
                 if (_steerDirection > 0)
                 {
-                    driftRight = true;
-                    driftLeft = false;
+                    _driftRight = true;
+                    _driftLeft = false;
                 }
                 else if (_steerDirection < 0)
                 {
-                    driftRight = false;
-                    driftLeft = true;
+                    _driftRight = false;
+                    _driftLeft = true;
                 }
             }
 
             if (_drifting && touchingGround && _currentSpeed > 20 && _moveInput.x != 0)
             {
-                driftTime += Time.fixedDeltaTime;
+                _driftTime += Time.fixedDeltaTime;
 
-               if (driftTime >= 1.5 && driftTime < 4)
+               if (_driftTime >= 1.5 && _driftTime < 4)
                 {
                     for (int i = 0; i < leftDrift.childCount; i++)
                     {
@@ -203,14 +201,13 @@ namespace _PROJECT.Scripts
 
                         if (!DriftPS.isPlaying && !DriftPS2.isPlaying)
                         {
-                            Debug.Log("Ek is hier");
                             DriftPS.Play();
                             DriftPS2.Play();
                         }
                     }
                 }
 
-                if (driftTime >= 4 && driftTime < 7)
+                if (_driftTime >= 4 && _driftTime < 7)
                 {
                     for (int i = 0; i < leftDrift.childCount; i++)
                     {
@@ -225,7 +222,7 @@ namespace _PROJECT.Scripts
                     }
                 }
 
-                if (driftTime >= 7)
+                if (_driftTime >= 7)
                 {
                     for (int i = 0; i < leftDrift.childCount; i++)
                     {
@@ -244,33 +241,31 @@ namespace _PROJECT.Scripts
             if (!_drifting || _realSpeed < 20)
             {
                 transform.GetChild(0).GetComponent<Animator>().SetTrigger("DoneHopping");
-                driftLeft = false;
-                driftRight = false;
+                _driftLeft = false;
+                _driftRight = false;
                 isSliding = false;
                 
-                if (driftTime >= 1.5 && driftTime < 4)
+                if (_driftTime >= 1.5 && _driftTime < 4)
                 {
                     boostTime = 0.75f;
                 }
 
-                if (driftTime >= 4 && driftTime < 7)
+                if (_driftTime >= 4 && _driftTime < 7)
                 {
                     boostTime = 1.5f;
                 }
 
-                if (driftTime >= 7)
+                if (_driftTime >= 7)
                 {
                     boostTime = 2.5f;
                 }
                 
-                driftTime = 0;
+                _driftTime = 0;
                 for (int i = 0; i <= 2; i++)
                 {
                     ParticleSystem DriftPS = rightDrift.transform.GetChild(i).GetComponent<ParticleSystem>();
-                    ParticleSystem.MainModule PSMain = DriftPS.main;
                     
                     ParticleSystem DriftPS2 = leftDrift.transform.GetChild(i).GetComponent<ParticleSystem>();
-                    ParticleSystem.MainModule PSMain2 = DriftPS2.main;
                     
                     DriftPS.Stop();
                     DriftPS2.Stop();
