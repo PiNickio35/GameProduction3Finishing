@@ -15676,7 +15676,6 @@ GameObject:
   - component: {fileID: 1726284225962262737}
   - component: {fileID: 2272491181766955693}
   - component: {fileID: 4349179118173384143}
-  - component: {fileID: 8767847901629024705}
   - component: {fileID: 3663549932509684469}
   m_Layer: 0
   m_Name: Player
@@ -15727,7 +15726,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!114 &2272491181766955693
 MonoBehaviour:
@@ -15745,8 +15744,6 @@ MonoBehaviour:
   boostSpeed: 60
   frontLeftTyre: {fileID: 4883935381660286885}
   frontRightTyre: {fileID: 5832476288424732335}
-  backLeftTyre: {fileID: 1029865969734206726}
-  backRightTyre: {fileID: 7033424671390467725}
   isSliding: 0
   touchingGround: 0
   leftDrift: {fileID: 6854656209848070065}
@@ -15836,21 +15833,6 @@ MonoBehaviour:
   m_DefaultActionMap: PlayerMap
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 2453148463333392800}
---- !u!114 &8767847901629024705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6158548258181076918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09cc86e233ebc5840b0a367bde3a999a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerName: Steve
-  playerHealth: 0
-  playerScore: 0
 --- !u!135 &3663549932509684469
 SphereCollider:
   m_ObjectHideFlags: 0

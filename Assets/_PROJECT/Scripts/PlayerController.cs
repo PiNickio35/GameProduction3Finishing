@@ -72,12 +72,15 @@ namespace _PROJECT.Scripts
 
         private void FixedUpdate()
         {
-            Move();
-            TyreSteer();
-            Steer();
-            GroundNormalRotation();
-            Drift();
-            Boosts();
+            if (PlayerLobbyManager.Instance.startYourEngines)
+            {
+                Move();
+                TyreSteer();
+                Steer();
+                GroundNormalRotation();
+                Drift();
+                Boosts();
+            }
         }
 
         private void Move()
