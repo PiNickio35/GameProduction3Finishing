@@ -8,10 +8,23 @@ namespace _PROJECT.Scripts
 {
     public class LapManager : MonoBehaviour
     {
+        public static LapManager Instance;
         public List<Checkpoint> checkpoints;
         public int totalLaps;
         [SerializeField] private TextMeshProUGUI lapNumberText;
         [SerializeField] private GameObject winText;
+
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -30,15 +43,16 @@ namespace _PROJECT.Scripts
                     {
                         Debug.Log("win");
                         winText.gameObject.SetActive(true);
+                        PlayerLobbyManager.Instance.startYourEngines = false;
                     }
                 }
             }
         }
         
-        private IEnumerator DisplayLap()
+        public IEnumerator DisplayLap()
         {
             lapNumberText.gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(2.5f);
             lapNumberText.gameObject.SetActive(false);
         }
     }

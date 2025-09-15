@@ -21,7 +21,7 @@ namespace _PROJECT.Scripts
             }
             else
             {
-                Destroy(gameObject); // Destroy duplicate instances
+                Destroy(gameObject); 
             }
         }
 
@@ -54,6 +54,7 @@ namespace _PROJECT.Scripts
             yield return new WaitForSeconds(1);
             countdownText.text = "GO";
             startYourEngines = true;
+            LapManager.Instance.StartCoroutine(LapManager.Instance.DisplayLap());
             yield return new WaitForSeconds(1);
             countdownText.gameObject.SetActive(false);
         }
