@@ -1,6 +1,8 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace _PROJECT.Scripts
 {
@@ -8,7 +10,8 @@ namespace _PROJECT.Scripts
     {
         public static PlayerLobbyManager Instance;
         private int _playerNumber;
-        private int _currentPlayerNumber;
+        public int currentPlayerNumber;
+        [SerializeField] private PlayerInputManager playerInputManager;
         [SerializeField] private GameObject joinPanel;
         [SerializeField] private TextMeshProUGUI countdownText;
         public bool startYourEngines;
@@ -34,11 +37,12 @@ namespace _PROJECT.Scripts
 
         public void OnJoinLobby()
         {
-            _currentPlayerNumber++;
-            Debug.Log(_currentPlayerNumber);
-            if (_currentPlayerNumber == _playerNumber)
+            currentPlayerNumber++;
+            Debug.Log(currentPlayerNumber);
+            if (currentPlayerNumber == _playerNumber)
             {
                 Debug.Log("Start");
+                playerInputManager.DisableJoining();
                 StartCoroutine(CountDown());
             }
         }
@@ -47,12 +51,16 @@ namespace _PROJECT.Scripts
         {
             countdownText.gameObject.SetActive(true);
             countdownText.text = "3";
+            LapManager.Instance.beepSound.Play();
             yield return new WaitForSeconds(1);
             countdownText.text = "2";
+            LapManager.Instance.beepSound.Play();
             yield return new WaitForSeconds(1);
             countdownText.text = "1";
+            LapManager.Instance.beepSound.Play();
             yield return new WaitForSeconds(1);
             countdownText.text = "GO";
+            LapManager.Instance.goSound.Play();
             startYourEngines = true;
             LapManager.Instance.StartCoroutine(LapManager.Instance.DisplayLap());
             yield return new WaitForSeconds(1);

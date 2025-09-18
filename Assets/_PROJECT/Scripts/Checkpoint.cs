@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace _PROJECT.Scripts
@@ -5,6 +6,12 @@ namespace _PROJECT.Scripts
     public class Checkpoint : MonoBehaviour
     {
         public int index;
+        private AudioSource _audioSource;
+
+        private void Awake()
+        {
+            _audioSource = GetComponent<AudioSource>();
+        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -14,6 +21,7 @@ namespace _PROJECT.Scripts
                 if (playerController.checkpointIndex == index - 1)
                 {
                     playerController.checkpointIndex = index;
+                    _audioSource.Play();
                 }
             }
         }

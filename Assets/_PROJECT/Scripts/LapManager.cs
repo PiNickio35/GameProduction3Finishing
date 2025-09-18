@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _PROJECT.Scripts
 {
@@ -13,6 +15,10 @@ namespace _PROJECT.Scripts
         public int totalLaps;
         [SerializeField] private TextMeshProUGUI lapNumberText;
         [SerializeField] private GameObject winText;
+        [SerializeField] public AudioSource goSound, beepSound;
+        [SerializeField] private AudioSource winSound;
+        [SerializeField] private List<RectTransform> lapNumberTransform;
+        [SerializeField] private List<Color> lapColor;
 
         private void Awake()
         {
@@ -36,19 +42,29 @@ namespace _PROJECT.Scripts
                     playerController.checkpointIndex = 0;
                     playerController.lapNumber++;
                     Debug.Log("Lap");
-                    // lapNumberText.transform.position = playerController.gameObject.transform.position;
+                    lapNumberText.rectTransform.position = lapNumberTransform[int.Parse(playerController.name.Last().ToString()) - 1].position;
+                    lapNumberText.color = lapColor[int.Parse(playerController.name.Last().ToString()) - 1];
                     lapNumberText.text = playerController.lapNumber.ToString();
                     StartCoroutine(DisplayLap());
                     if (playerController.lapNumber > totalLaps)
                     {
                         Debug.Log("win");
+                        winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Win " + playerController.name + " !";
                         winText.gameObject.SetActive(true);
+                        winSound.Play();
                         PlayerLobbyManager.Instance.startYourEngines = false;
+                        StartCoroutine(WindDown());
                     }
                 }
             }
         }
-        
+
+        private IEnumerator WindDown()
+        {
+            yield return new WaitForSeconds(2.5f);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
         public IEnumerator DisplayLap()
         {
             lapNumberText.gameObject.SetActive(true);

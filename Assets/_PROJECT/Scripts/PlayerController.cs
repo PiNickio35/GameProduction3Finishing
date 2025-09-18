@@ -53,6 +53,7 @@ namespace _PROJECT.Scripts
         {
             lapNumber = 1;
             checkpointIndex = 0;
+            name = "Player " + PlayerLobbyManager.Instance.currentPlayerNumber;
         }
 
         public void OnMove(InputAction.CallbackContext context)
