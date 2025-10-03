@@ -7,12 +7,21 @@ namespace _PROJECT.Scripts.Client
 {
     public class PlayerNetwork : NetworkBehaviour
     {
+        [Header("Player Data")]
+        private NetworkVariable<float> playerHealth = new NetworkVariable<float>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
+        [Header ("Movement")]
         private CharacterInput characterInput;
         private Vector2 _moveInput = Vector2.zero;
         private float _realSpeed;
         private float _currentSpeed;
         public float maxSpeed = 40;
         private Rigidbody _rb;
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+        }
 
         private void Awake()
         {
