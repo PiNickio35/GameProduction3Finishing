@@ -17,6 +17,8 @@ namespace _PROJECT.Scripts.Client
         private float _currentSpeed;
         public float maxSpeed = 40;
         private Rigidbody _rb;
+        
+        [SerializeField] private GameObject spawnedItemPrefab;
 
         public override void OnNetworkSpawn()
         {
@@ -51,7 +53,8 @@ namespace _PROJECT.Scripts.Client
 
         private void OnDrift(InputAction.CallbackContext obj)
         {
-            throw new NotImplementedException();
+            GameObject tempHolder = Instantiate(spawnedItemPrefab);
+            tempHolder.GetComponent<NetworkObject>().Spawn(true);
         }
 
         private void OnMove(InputAction.CallbackContext obj)
@@ -64,6 +67,18 @@ namespace _PROJECT.Scripts.Client
             characterInput.PlayerMap.Move.performed -= OnMove;
             characterInput.PlayerMap.Drift.performed -= OnDrift;
             characterInput.PlayerMap.Quit.performed -= OnQuit;
+        }
+
+        [ServerRpc]
+        private void TestServerRpc()
+        {
+            Debug.Log("TestServerRpc" + OwnerClientId);
+        }
+
+        [ClientRpc]
+        private void TestClientRpc()
+        {
+            Debug.Log("TestClientRpc" + OwnerClientId);
         }
     }
 }

@@ -280,6 +280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_PROJECT.Scripts.Client.PlayerNetwork
   ShowTopMostFoldoutHeaderGroup: 1
   maxSpeed: 40
+  spawnedItemPrefab: {fileID: 766183169913658293, guid: 271decd501322e146827c83e775865f8, type: 3}
 --- !u!114 &5651307090298750751
 MonoBehaviour:
   m_ObjectHideFlags: 0
