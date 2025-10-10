@@ -7,11 +7,8 @@ namespace _PROJECT.Scripts.Client
 {
     public class PlayerNetwork : NetworkBehaviour
     {
-        [Header("Player Data")]
-        private NetworkVariable<float> playerHealth = new NetworkVariable<float>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-        
         [Header ("Movement")]
-        private CharacterInput characterInput;
+        private CharacterInput _characterInput;
         private Vector2 _moveInput = Vector2.zero;
         private float _realSpeed;
         private float _currentSpeed;
@@ -22,18 +19,13 @@ namespace _PROJECT.Scripts.Client
 
         public override void OnNetworkSpawn()
         {
-            base.OnNetworkSpawn();
-        }
-
-        private void Awake()
-        {
             _rb = GetComponentInChildren<Rigidbody>();
-            characterInput = new CharacterInput();
-            characterInput.Enable();
+            _characterInput = new CharacterInput();
+            _characterInput.Enable();
         
-            characterInput.PlayerMap.Move.performed += OnMove;
-            characterInput.PlayerMap.Drift.performed += OnDrift;
-            characterInput.PlayerMap.Quit.performed += OnQuit;
+            _characterInput.PlayerMap.Move.performed += OnMove;
+            _characterInput.PlayerMap.Drift.performed += OnDrift;
+            _characterInput.PlayerMap.Quit.performed += OnQuit;
         }
 
         private void FixedUpdate()
@@ -64,9 +56,9 @@ namespace _PROJECT.Scripts.Client
 
         private void OnDisable()
         {
-            characterInput.PlayerMap.Move.performed -= OnMove;
-            characterInput.PlayerMap.Drift.performed -= OnDrift;
-            characterInput.PlayerMap.Quit.performed -= OnQuit;
+            _characterInput.PlayerMap.Move.performed -= OnMove;
+            _characterInput.PlayerMap.Drift.performed -= OnDrift;
+            _characterInput.PlayerMap.Quit.performed -= OnQuit;
         }
 
         [ServerRpc]

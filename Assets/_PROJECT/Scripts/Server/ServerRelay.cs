@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace _PROJECT.Scripts.Server
 {
-    public class ServerRelay : NetworkBehaviour
+    public class ServerRelay : MonoBehaviour
     {
         [SerializeField] private int maxPlayers = 3;
         
