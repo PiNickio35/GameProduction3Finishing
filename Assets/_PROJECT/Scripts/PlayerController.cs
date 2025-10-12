@@ -1,9 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace _PROJECT.Scripts
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : NetworkBehaviour
     {
         private Rigidbody _rb;
         
@@ -44,16 +45,12 @@ namespace _PROJECT.Scripts
         public int lapNumber;
         public int checkpointIndex;
 
-        private void Awake()
+        public override void OnNetworkSpawn()
         {
             _rb = GetComponent<Rigidbody>();
-        }
-
-        private void Start()
-        {
             lapNumber = 1;
             checkpointIndex = 0;
-            name = "Player " + PlayerLobbyManager.Instance.currentPlayerNumber;
+            // name = "Player " + PlayerLobbyManager.Instance.currentPlayerNumber;
         }
 
         public void OnMove(InputAction.CallbackContext context)
@@ -73,15 +70,16 @@ namespace _PROJECT.Scripts
 
         private void FixedUpdate()
         {
-            if (PlayerLobbyManager.Instance.startYourEngines)
-            {
+            if (!IsOwner) return;
+            // if (PlayerLobbyManager.Instance.startYourEngines)
+            // {
                 Move();
                 TyreSteer();
                 Steer();
                 GroundNormalRotation();
                 Drift();
                 Boosts();
-            }
+            // }
         }
 
         private void Move()
