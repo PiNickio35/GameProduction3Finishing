@@ -69,15 +69,15 @@ public class PlayerController : NetworkBehaviour
     private void FixedUpdate()
     {
         if (!IsOwner) return;
-        // if (PlayerLobbyManager.Instance.startYourEngines)
-        // {
-        Move();
-        TyreSteer();
-        Steer();
-        GroundNormalRotation();
-        Drift();
-        Boosts();
-        // }
+        if (LapManager.Instance.startYourEngines)
+        {
+            Move();
+            TyreSteer();
+            Steer();
+            GroundNormalRotation();
+            Drift();
+            Boosts();
+        }
     }
 
     private void Move()

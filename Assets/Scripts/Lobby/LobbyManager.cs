@@ -281,6 +281,7 @@ namespace Lobby
                         }
                     });
                 _joinedLobby = lobby;
+                LapManager.Instance.StartCoroutine(LapManager.Instance.CountDown());
             }
             catch (LobbyServiceException e)
             {

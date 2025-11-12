@@ -16,6 +16,8 @@ public class LapManager : MonoBehaviour
     [SerializeField] private AudioSource winSound;
     [SerializeField] private List<RectTransform> lapNumberTransform;
     [SerializeField] private List<Color> lapColor;
+    [SerializeField] private TextMeshProUGUI countdownText;
+    public bool startYourEngines;
 
     private void Awake()
     {
@@ -67,5 +69,25 @@ public class LapManager : MonoBehaviour
         lapNumberText.gameObject.SetActive(true);
         yield return new WaitForSeconds(2.5f);
         lapNumberText.gameObject.SetActive(false);
+    }
+    
+    public IEnumerator CountDown()
+    {
+        countdownText.gameObject.SetActive(true);
+        countdownText.text = "3";
+        beepSound.Play();
+        yield return new WaitForSeconds(1);
+        countdownText.text = "2";
+        beepSound.Play();
+        yield return new WaitForSeconds(1);
+        countdownText.text = "1";
+        beepSound.Play();
+        yield return new WaitForSeconds(1);
+        countdownText.text = "GO";
+        goSound.Play();
+        startYourEngines = true;
+        StartCoroutine(DisplayLap());
+        yield return new WaitForSeconds(1);
+        countdownText.gameObject.SetActive(false);
     }
 }

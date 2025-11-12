@@ -15704,6 +15704,8 @@ GameObject:
   - component: {fileID: 3663549932509684469}
   - component: {fileID: 1791003064767471094}
   - component: {fileID: 7463053516208862790}
+  - component: {fileID: -7001654647913618367}
+  - component: {fileID: 577645365694528906}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -15970,6 +15972,64 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &-7001654647913618367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6158548258181076918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -499022955
+    DestinationState: 866648894
+    TransitionDuration: 0
+    TriggerNameHash: 866648894
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 866648894
+    DestinationState: -499022955
+    TransitionDuration: 0
+    TriggerNameHash: 1381364778
+    TransitionIndex: 0
+  m_Animator: {fileID: 3795508412541157650}
+--- !u!114 &577645365694528906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6158548258181076918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkAnimator
+  ShowTopMostFoldoutHeaderGroup: 1
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -499022955
+    DestinationState: 866648894
+    TransitionDuration: 0
+    TriggerNameHash: 866648894
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 866648894
+    DestinationState: -499022955
+    TransitionDuration: 0
+    TriggerNameHash: 1381364778
+    TransitionIndex: 0
+  m_Animator: {fileID: 9143025846060220854}
 --- !u!1 &6460716620267151414
 GameObject:
   m_ObjectHideFlags: 0
@@ -16052,7 +16112,7 @@ Animator:
   m_GameObject: {fileID: 7117561866209713001}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 305a556307b36464395aa157cffcd3db, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ec2cd7b278d7d5a41b604ea765208e80, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

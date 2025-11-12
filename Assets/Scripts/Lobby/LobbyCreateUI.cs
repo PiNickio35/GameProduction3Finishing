@@ -49,6 +49,8 @@ namespace Lobby
                     (int maxPlayers) => 
                     {
                         _maxPlayers = maxPlayers;
+                        if (_maxPlayers > 4) _maxPlayers = 4;
+                        if (_maxPlayers < 2) _maxPlayers = 2;
                         UpdateText();
                     });
             });
