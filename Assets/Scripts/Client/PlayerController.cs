@@ -1,4 +1,7 @@
+using Lobby;
 using Unity.Netcode;
+using Unity.Services.Authentication;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -50,7 +53,14 @@ namespace Client
             _rb = GetComponent<Rigidbody>();
             lapNumber = 1;
             checkpointIndex = 0;
-            // name = "Player " + PlayerLobbyManager.Instance.currentPlayerNumber;
+            // foreach (var player in LobbyManager.Instance.GetJoinedLobby().Players)
+            // {
+            //     if (player.Id == AuthenticationService.Instance.PlayerId)
+            //     {
+            //         name = player.Profile.Name;
+            //     }
+            // }
+            Debug.Log(name);
         }
 
         public void OnMove(InputAction.CallbackContext context)
