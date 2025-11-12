@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Client;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,8 +14,6 @@ public class LapManager : MonoBehaviour
     [SerializeField] private GameObject winText;
     [SerializeField] public AudioSource goSound, beepSound;
     [SerializeField] private AudioSource winSound;
-    [SerializeField] private List<RectTransform> lapNumberTransform;
-    [SerializeField] private List<Color> lapColor;
     [SerializeField] private TextMeshProUGUI countdownText;
     public bool startYourEngines;
 
@@ -41,8 +39,6 @@ public class LapManager : MonoBehaviour
                 playerController.checkpointIndex = 0;
                 playerController.lapNumber++;
                 Debug.Log("Lap");
-                lapNumberText.rectTransform.position = lapNumberTransform[int.Parse(playerController.name.Last().ToString()) - 1].position;
-                lapNumberText.color = lapColor[int.Parse(playerController.name.Last().ToString()) - 1];
                 lapNumberText.text = playerController.lapNumber.ToString();
                 StartCoroutine(DisplayLap());
                 if (playerController.lapNumber > totalLaps)
@@ -51,7 +47,7 @@ public class LapManager : MonoBehaviour
                     winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Win " + playerController.name + " !";
                     winText.gameObject.SetActive(true);
                     winSound.Play();
-                    PlayerLobbyManager.Instance.startYourEngines = false;
+                    startYourEngines = false;
                     StartCoroutine(WindDown());
                 }
             }

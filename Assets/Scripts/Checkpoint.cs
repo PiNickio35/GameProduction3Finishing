@@ -1,3 +1,4 @@
+using Client;
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
