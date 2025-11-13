@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Client;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LapManager : MonoBehaviour
+public class LapManager : NetworkBehaviour
 {
     public static LapManager Instance;
     public List<Checkpoint> checkpoints;
@@ -48,6 +49,7 @@ public class LapManager : MonoBehaviour
                     winText.gameObject.SetActive(true);
                     winSound.Play();
                     startYourEngines = false;
+                    if (!IsHost) return;
                     StartCoroutine(WindDown());
                 }
             }
@@ -57,7 +59,7 @@ public class LapManager : MonoBehaviour
     private IEnumerator WindDown()
     {
         yield return new WaitForSeconds(2.5f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        NetworkManager.SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
     }
 
     public IEnumerator DisplayLap()
