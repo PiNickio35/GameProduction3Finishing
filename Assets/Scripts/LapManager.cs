@@ -45,12 +45,7 @@ public class LapManager : NetworkBehaviour
                 if (playerController.lapNumber > totalLaps)
                 {
                     Debug.Log("win");
-                    winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Win " + playerController.name + " !";
-                    winText.gameObject.SetActive(true);
-                    winSound.Play();
-                    startYourEngines = false;
-                    if (!IsHost) return;
-                    StartCoroutine(WindDown());
+                    WinServerRpc(playerController.name);
                 }
             }
         }
@@ -87,5 +82,34 @@ public class LapManager : NetworkBehaviour
         StartCoroutine(DisplayLap());
         yield return new WaitForSeconds(1);
         countdownText.gameObject.SetActive(false);
+    }
+
+    [ServerRpc]
+    private void WinServerRpc(string playerName)
+    {
+        WinClientRpc(playerName);
+    }
+
+    [ClientRpc]
+    private void WinClientRpc(string playerName)
+    {
+        winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Win " + playerName + "!";
+        winText.gameObject.SetActive(true);
+        winSound.Play();
+        startYourEngines = false;
+        if (!IsHost) return;
+        StartCoroutine(WindDown());
+    }
+
+    [ServerRpc]
+    public void StartCountDownServerRpc()
+    {
+        StartCountDownClientRpc();
+    }
+
+    [ClientRpc]
+    private void StartCountDownClientRpc()
+    {
+        StartCoroutine(CountDown());
     }
 }

@@ -1,7 +1,7 @@
+using System.Collections;
 using Lobby;
+using TMPro;
 using Unity.Netcode;
-using Unity.Services.Authentication;
-using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -50,31 +50,42 @@ namespace Client
 
         public override void OnNetworkSpawn()
         {
+            base.OnNetworkSpawn();
+            if (!IsOwner) return;
             _rb = GetComponent<Rigidbody>();
             lapNumber = 1;
             checkpointIndex = 0;
-            // foreach (var player in LobbyManager.Instance.GetJoinedLobby().Players)
-            // {
-            //     if (player.Id == AuthenticationService.Instance.PlayerId)
-            //     {
-            //         name = player.Profile.Name;
-            //     }
-            // }
+            name = EditPlayerName.Instance.GetPlayerName();
             Debug.Log(name);
+        }
+
+        protected override void OnNetworkPostSpawn()
+        {
+            base.OnNetworkPostSpawn();
+            if (IsHost) StartCoroutine(CountDown());
+        }
+
+        private IEnumerator CountDown()
+        {
+            yield return new WaitForEndOfFrame();
+            LapManager.Instance.StartCountDownServerRpc();
         }
 
         public void OnMove(InputAction.CallbackContext context)
         {
+            if (!IsOwner) return;
             _moveInput = context.ReadValue<Vector2>();
         }
 
         public void OnDrift(InputAction.CallbackContext context)
         {
+            if (!IsOwner) return;
             _drifting = context.action.triggered;
         }
 
         public void OnQuit(InputAction.CallbackContext context)
         {
+            if (!IsOwner) return;
             Application.Quit();
         }
 

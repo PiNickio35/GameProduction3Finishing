@@ -138,7 +138,7 @@ namespace Lobby
             return false;
         }
         
-        private Player GetPlayer()
+        public Player GetPlayer()
         {
             return new Player(AuthenticationService.Instance.PlayerId, null, new Dictionary<string, PlayerDataObject>
             {
@@ -281,7 +281,6 @@ namespace Lobby
                         }
                     });
                 _joinedLobby = lobby;
-                LapManager.Instance.StartCoroutine(LapManager.Instance.CountDown());
             }
             catch (LobbyServiceException e)
             {

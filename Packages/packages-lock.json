@@ -16,7 +16,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.barracuda": {
-      "version": "3.0.0",
+      "version": "3.0.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -37,7 +37,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "3.1.4",
+      "version": "3.1.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -47,7 +47,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "2.10.0",
+      "version": "2.10.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -67,7 +67,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.connect.share": {
-      "version": "4.2.3",
+      "version": "4.2.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -134,7 +134,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ml-agents": {
-      "version": "2.0.1",
+      "version": "2.0.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -168,11 +168,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.netcode.gameobjects": {
-      "version": "2.6.0",
+      "version": "2.7.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.transport": "2.4.0",
+        "com.unity.transport": "2.6.0",
         "com.unity.nuget.mono-cecil": "1.11.4"
       },
       "url": "https://packages.unity.com"
@@ -421,7 +421,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.9.8",
+      "version": "1.9.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
