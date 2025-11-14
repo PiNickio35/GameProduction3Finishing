@@ -1,6 +1,4 @@
-using System.Collections;
 using Lobby;
-using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -50,7 +48,6 @@ namespace Client
 
         public override void OnNetworkSpawn()
         {
-            base.OnNetworkSpawn();
             if (!IsOwner) return;
             _rb = GetComponent<Rigidbody>();
             lapNumber = 1;
@@ -58,17 +55,13 @@ namespace Client
             name = EditPlayerName.Instance.GetPlayerName();
             Debug.Log(name);
         }
-
+        
         protected override void OnNetworkPostSpawn()
         {
-            base.OnNetworkPostSpawn();
-            if (IsHost) StartCoroutine(CountDown());
-        }
-
-        private IEnumerator CountDown()
-        {
-            yield return new WaitForEndOfFrame();
-            LapManager.Instance.StartCountDownServerRpc();
+            if (IsHost)
+            {
+                if (NetworkManager.Singleton.ConnectedClientsList.Count >= LobbyManager.Instance.GetJoinedLobby().MaxPlayers) LapManager.Instance.StartCountDownClientRpc();
+            }
         }
 
         public void OnMove(InputAction.CallbackContext context)

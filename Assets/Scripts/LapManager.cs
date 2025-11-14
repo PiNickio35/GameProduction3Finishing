@@ -40,13 +40,14 @@ public class LapManager : NetworkBehaviour
                 playerController.checkpointIndex = 0;
                 playerController.lapNumber++;
                 Debug.Log("Lap");
-                lapNumberText.text = playerController.lapNumber.ToString();
-                StartCoroutine(DisplayLap());
                 if (playerController.lapNumber > totalLaps)
                 {
                     Debug.Log("win");
                     WinServerRpc(playerController.name);
+                    return;
                 }
+                lapNumberText.text = "Lap " + playerController.lapNumber.ToString() + "/" + totalLaps.ToString();
+                StartCoroutine(DisplayLap());
             }
         }
     }
@@ -66,6 +67,7 @@ public class LapManager : NetworkBehaviour
     
     public IEnumerator CountDown()
     {
+        Debug.Log("Hier gat ons");
         countdownText.gameObject.SetActive(true);
         countdownText.text = "3";
         beepSound.Play();
@@ -108,7 +110,7 @@ public class LapManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void StartCountDownClientRpc()
+    public void StartCountDownClientRpc()
     {
         StartCoroutine(CountDown());
     }

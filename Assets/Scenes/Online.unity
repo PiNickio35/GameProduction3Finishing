@@ -4595,17 +4595,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 766183169913658293, guid: 271decd501322e146827c83e775865f8, type: 3}
   m_PrefabInstance: {fileID: 1077433698}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1077433701 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8167268273429317253, guid: 271decd501322e146827c83e775865f8, type: 3}
-  m_PrefabInstance: {fileID: 1077433698}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1077433700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f5561418b750eb49b1789999ceae128, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!82 &1077433702
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7656,14 +7645,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 876057726
       objectReference: {fileID: 0}
-    - target: {fileID: -7974793013755531215, guid: 0d8d8172af22d924da48d367fd8a17ef, type: 3}
-      propertyPath: SceneMigrationSynchronization
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -7974793013755531215, guid: 0d8d8172af22d924da48d367fd8a17ef, type: 3}
-      propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 3246709479
-      objectReference: {fileID: 0}
     - target: {fileID: 4976652728478395427, guid: 0d8d8172af22d924da48d367fd8a17ef, type: 3}
       propertyPath: m_LocalPosition.x
       value: -101.27
@@ -7716,18 +7697,6 @@ PrefabInstance:
       propertyPath: lapNumberText
       value: 
       objectReference: {fileID: 773503522}
-    - target: {fileID: 6737488473488325524, guid: 0d8d8172af22d924da48d367fd8a17ef, type: 3}
-      propertyPath: 'checkpoints.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1077433701}
-    - target: {fileID: 6737488473488325524, guid: 0d8d8172af22d924da48d367fd8a17ef, type: 3}
-      propertyPath: 'checkpoints.Array.data[1]'
-      value: 
-      objectReference: {fileID: 821996082}
-    - target: {fileID: 6737488473488325524, guid: 0d8d8172af22d924da48d367fd8a17ef, type: 3}
-      propertyPath: 'checkpoints.Array.data[2]'
-      value: 
-      objectReference: {fileID: 1891325876}
     - target: {fileID: 8502454684984302224, guid: 0d8d8172af22d924da48d367fd8a17ef, type: 3}
       propertyPath: m_Name
       value: StartFinishLine
