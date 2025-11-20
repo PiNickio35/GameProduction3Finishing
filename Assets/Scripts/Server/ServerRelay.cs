@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Services.Relay;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace Server
 {
-    public class ServerRelay : MonoBehaviour
+    public class ServerRelay : NetworkBehaviour
     {
         public static ServerRelay Instance;
         
@@ -49,6 +50,35 @@ namespace Server
             {
                 Debug.Log(e);
             }
+        }
+        
+        [ServerRpc]
+        public void WinServerRpc(string playerName)
+        {
+            WinClientRpc(playerName);
+        }
+
+        [ClientRpc]
+        private void WinClientRpc(string playerName)
+        {
+            LapManager.Instance.winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Win " + playerName + "!";
+            LapManager.Instance.winText.gameObject.SetActive(true);
+            LapManager.Instance.winSound.Play();
+            LapManager.Instance.startYourEngines = false;
+            if (!IsHost) return;
+            LapManager.Instance.StartCoroutine(LapManager.Instance.WindDown());
+        }
+
+        [ServerRpc]
+        public void StartCountDownServerRpc()
+        {
+            StartCountDownClientRpc();
+        }
+
+        [ClientRpc]
+        public void StartCountDownClientRpc()
+        {
+            LapManager.Instance.StartCoroutine(LapManager.Instance.CountDown());
         }
     }
 }

@@ -40,27 +40,7 @@ public class PlayerLobbyManager : MonoBehaviour
         {
             Debug.Log("Start");
             playerInputManager.DisableJoining();
-            StartCoroutine(CountDown());
+            LapManager.Instance.StartCoroutine(LapManager.Instance.CountDown());
         }
-    }
-
-    private IEnumerator CountDown()
-    {
-        countdownText.gameObject.SetActive(true);
-        countdownText.text = "3";
-        LapManager.Instance.beepSound.Play();
-        yield return new WaitForSeconds(1);
-        countdownText.text = "2";
-        LapManager.Instance.beepSound.Play();
-        yield return new WaitForSeconds(1);
-        countdownText.text = "1";
-        LapManager.Instance.beepSound.Play();
-        yield return new WaitForSeconds(1);
-        countdownText.text = "GO";
-        LapManager.Instance.goSound.Play();
-        startYourEngines = true;
-        LapManager.Instance.StartCoroutine(LapManager.Instance.DisplayLap());
-        yield return new WaitForSeconds(1);
-        countdownText.gameObject.SetActive(false);
     }
 }

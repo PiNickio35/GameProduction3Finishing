@@ -1,4 +1,6 @@
+using System.Collections;
 using Lobby;
+using Server;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -60,8 +62,14 @@ namespace Client
         {
             if (IsHost)
             {
-                if (NetworkManager.Singleton.ConnectedClientsList.Count >= LobbyManager.Instance.GetJoinedLobby().MaxPlayers) LapManager.Instance.StartCountDownClientRpc();
+                StartCoroutine(StartUp());
             }
+        }
+
+        private IEnumerator StartUp()
+        {
+            yield return new WaitForSeconds(5f);
+            ServerRelay.Instance.StartCountDownServerRpc(); // if (NetworkManager.Singleton.ConnectedClientsList.Count >= LobbyManager.Instance.GetJoinedLobby().MaxPlayers) 
         }
 
         public void OnMove(InputAction.CallbackContext context)

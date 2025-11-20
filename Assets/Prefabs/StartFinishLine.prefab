@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 24893062235240026}
   - component: {fileID: 8235964018443411517}
   - component: {fileID: 5020528732670208833}
-  - component: {fileID: -7974793013755531215}
   - component: {fileID: 6737488473488325524}
   - component: {fileID: 5008013289305607007}
   - component: {fileID: 5535135013158010402}
@@ -117,31 +116,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 13.615175, y: 7.117058, z: 1.666665}
   m_Center: {x: 0.015336752, y: 2.9551682, z: -0.0000024437904}
---- !u!114 &-7974793013755531215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8502454684984302224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 876057726
-  InScenePlacedSourceGlobalObjectIdHash: 3246709479
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!114 &6737488473488325524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,12 +128,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa7deaec4c50ba439e5b285d9b39ce3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   checkpoints:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  totalLaps: 1
+  totalLaps: 3
   lapNumberText: {fileID: 0}
   winText: {fileID: 0}
   goSound: {fileID: 5535135013158010402}

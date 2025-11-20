@@ -1,20 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using Client;
+using Server;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LapManager : NetworkBehaviour
+public class LapManager : MonoBehaviour
 {
     public static LapManager Instance;
     public List<Checkpoint> checkpoints;
     public int totalLaps;
     [SerializeField] private TextMeshProUGUI lapNumberText;
-    [SerializeField] private GameObject winText;
+    [SerializeField] public GameObject winText;
     [SerializeField] public AudioSource goSound, beepSound;
-    [SerializeField] private AudioSource winSound;
+    [SerializeField] public AudioSource winSound;
     [SerializeField] private TextMeshProUGUI countdownText;
     public bool startYourEngines;
 
@@ -43,26 +44,18 @@ public class LapManager : NetworkBehaviour
                 if (playerController.lapNumber > totalLaps)
                 {
                     Debug.Log("win");
-                    WinServerRpc(playerController.name);
+                    ServerRelay.Instance.WinServerRpc(playerController.name);
                     return;
                 }
                 lapNumberText.text = "Lap " + playerController.lapNumber.ToString() + "/" + totalLaps.ToString();
-                StartCoroutine(DisplayLap());
             }
         }
     }
 
-    private IEnumerator WindDown()
+    public IEnumerator WindDown()
     {
         yield return new WaitForSeconds(2.5f);
-        NetworkManager.SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
-    }
-
-    public IEnumerator DisplayLap()
-    {
-        lapNumberText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2.5f);
-        lapNumberText.gameObject.SetActive(false);
+        Application.Quit();
     }
     
     public IEnumerator CountDown()
@@ -81,37 +74,8 @@ public class LapManager : NetworkBehaviour
         countdownText.text = "GO";
         goSound.Play();
         startYourEngines = true;
-        StartCoroutine(DisplayLap());
+        lapNumberText.gameObject.SetActive(true);
         yield return new WaitForSeconds(1);
         countdownText.gameObject.SetActive(false);
-    }
-
-    [ServerRpc]
-    private void WinServerRpc(string playerName)
-    {
-        WinClientRpc(playerName);
-    }
-
-    [ClientRpc]
-    private void WinClientRpc(string playerName)
-    {
-        winText.GetComponentInChildren<TextMeshProUGUI>().text = "You Win " + playerName + "!";
-        winText.gameObject.SetActive(true);
-        winSound.Play();
-        startYourEngines = false;
-        if (!IsHost) return;
-        StartCoroutine(WindDown());
-    }
-
-    [ServerRpc]
-    public void StartCountDownServerRpc()
-    {
-        StartCountDownClientRpc();
-    }
-
-    [ClientRpc]
-    public void StartCountDownClientRpc()
-    {
-        StartCoroutine(CountDown());
     }
 }
